@@ -1,12 +1,13 @@
-const http = require("http");
-
+// src/index.js
+const express = require('express');
+const app = express();
 const PORT = 3000;
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Blogify API is running!");
-});
+// 1. Import the router
+const postRouter = require('./routes/posts.routes.js');
 
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.use('/api/v1/posts', postRouter);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
