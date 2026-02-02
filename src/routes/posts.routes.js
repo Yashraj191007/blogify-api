@@ -1,20 +1,10 @@
 const express = require('express');
+
 const router = express.Router();
 
-// 1. Import the controller
-const postController = require('../controllers/posts.controller.js');
-
-// 2. Use the controller function as the route handler
-// The router's job is now just to connect the path '/' to the 'getAllPosts' function.
-router.get('/', postController.getAllPosts);
-
-// We can remove the old inline function entirely!
-// router.get('/', (req, res) => { ... }); // This is now gone
-// src/routes/posts.routes.js
-
-// IMPORTANT: dynamic route comes AFTER static routes
-router.get('/:postId', postController.getPostById);
-
-
+// GET /api/v1/posts
+router.get('/', (req, res) => {
+  res.send('Fetching all blog posts...');
+});
 
 module.exports = router;
