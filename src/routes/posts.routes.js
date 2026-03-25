@@ -1,13 +1,20 @@
-// src/routes/posts.routes.js
 const express = require('express');
 const router = express.Router();
-const postsController = require('../controllers/posts.controller');
+const { protect } = require('../middleware');
+const postController = require('../controllers/posts.controller');
 
-// GET /api/v1/posts/
-router.get('/', postsController.getAllPosts);
+// Matches: GET /api/v1/posts
+router.get('/', (req, res) => {
+    res.json({ message: "Fetching all posts" });
+});
 
-// GET /api/v1/posts/:postId
-// Step 1: Define the placeholder with a colon (:)
-router.get('/:postId', postsController.getPostById);
+// Matches: GET /api/v1/posts/:id
+router.get('/:id', (req, res) => {
+    res.json({ message: `Fetching post with ID: ${req.params.id}` });
+});
+
+router.post('/', protect, postController.createPost);
+router.put('/:id', protect, postController.updatePost);
+router.delete('/:id', protect, postController.deletePost);
 
 module.exports = router;
