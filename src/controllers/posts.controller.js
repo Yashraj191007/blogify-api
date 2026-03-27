@@ -1,66 +1,75 @@
 // src/controllers/posts.controller.js
-const { validationResult } = require('express-validator');
-const Post = require('../models/post.model');
+const postService = require('../services/posts.service');
+
+const getAllPosts = async (req, res) => {
+  try {
+    const posts = await postService.getAllPosts();
+    res.status(200).json({ success: true, data: posts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getPostById = async (req, res) => {
+  try {
+    const post = await postService.getPostById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ success: false, message: 'Post not found' });
+    }
+    res.status(200).json({ success: true, data: post });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 const createPost = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { title, content } = req.body;
-  
   try {
-    const post = await Post.create({
+    const { title, content } = req.body;
+    const post = await postService.createPost({
       title,
       content,
-      author: req.user.id
+      author: req.user.id,
     });
-    
-    res.status(201).json({ message: "Post created successfully", data: post });
+    res.status(201).json({ success: true, data: post });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 const updatePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+    const existing = await postService.getPostById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Post not found' });
     }
 
-    if (post.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'You are not authorized to edit this post' });
+    if (existing.author._id.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not authorized to update this post' });
     }
 
-    const { title, content } = req.body;
-    post.title = title || post.title;
-    post.content = content || post.content;
-    const updatedPost = await post.save();
-
-    res.status(200).json({ message: 'Post updated', data: updatedPost });
+    const updated = await postService.updatePost(req.params.id, req.body);
+    res.status(200).json({ success: true, data: updated });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 const deletePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+    const existing = await postService.getPostById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Post not found' });
     }
 
-    if (post.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'You are not authorized to delete this post' });
+    if (existing.author._id.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not authorized to delete this post' });
     }
 
-    await post.deleteOne();
-    res.status(200).json({ message: 'Post removed' });
+    await postService.deletePost(req.params.id);
+    res.status(200).json({ success: true, message: 'Post deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-module.exports = { createPost, updatePost, deletePost };
+module.exports = { getAllPosts, getPostById, createPost, updatePost, deletePost };
