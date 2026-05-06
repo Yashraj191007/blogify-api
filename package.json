@@ -1,8 +1,11 @@
 {
-  "name": "backend-new",
+  "name": "blogify-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A production-ready RESTful API for the Blogify blogging platform",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
