@@ -1,13 +1,29 @@
 {
 	"info": {
 		"_postman_id": "ca1c24bc-cd10-4f51-b841-8bf79a615a99",
-		"name": "Blogify API Security Validations",
+		"name": "Blogify API",
+		"description": "Complete API documentation for the Blogify blogging platform. All routes are prefixed with /api/v1.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Users",
 			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "v1", "users"]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Register User",
 					"request": {
@@ -20,21 +36,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"securepassword123\"\n}"
+							"raw": "{\n  \"username\": \"alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"securepassword123\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:3000/api/v1/users/register",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"register"
-							]
+							"path": ["api", "v1", "users", "register"]
 						}
 					},
 					"response": []
@@ -56,16 +65,9 @@
 						"url": {
 							"raw": "http://localhost:3000/api/v1/users/login",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"login"
-							]
+							"path": ["api", "v1", "users", "login"]
 						}
 					},
 					"response": []
@@ -83,21 +85,37 @@
 						"url": {
 							"raw": "http://localhost:3000/api/v1/posts",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"posts"
+							"path": ["api", "v1", "posts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Post by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/posts/:postId",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "v1", "posts", ":postId"],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "REPLACE_WITH_POST_ID",
+									"description": "The MongoDB ObjectId of the post to retrieve"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create Post",
+					"name": "Create Post (Protected)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -108,28 +126,22 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"My First Secure Post\",\n  \"content\": \"This post is protected by my new secure architecture.\"\n}"
+							"raw": "{\n  \"title\": \"My First Blogify Post\",\n  \"content\": \"This post was created using the clean Blogify API architecture.\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:3000/api/v1/posts",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"posts"
-							]
+							"path": ["api", "v1", "posts"]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Update Post",
+					"name": "Update Post by ID (Protected)",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -138,42 +150,42 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"Updated Secure Post Title\"\n}"
+							"raw": "{\n  \"title\": \"Updated Post Title\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/posts/:id",
+							"raw": "http://localhost:3000/api/v1/posts/:postId",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"posts",
-								":id"
+							"path": ["api", "v1", "posts", ":postId"],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "REPLACE_WITH_POST_ID",
+									"description": "The MongoDB ObjectId of the post to update"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Post",
+					"name": "Delete Post by ID (Protected)",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/posts/:id",
+							"raw": "http://localhost:3000/api/v1/posts/:postId",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"posts",
-								":id"
+							"path": ["api", "v1", "posts", ":postId"],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "REPLACE_WITH_POST_ID",
+									"description": "The MongoDB ObjectId of the post to delete"
+								}
 							]
 						}
 					},

@@ -10,23 +10,21 @@ const mainRouter = require('./routes');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// --- Global Middleware ---
+// cors() must be mounted first to handle cross-origin requests before any other logic
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
-app.use(cors());
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Welcome to Blogify API');
-});
-
+// --- API Routes ---
+// Single master router mounted at /api/v1 — all resource routes are delegated from here
 app.use('/api/v1', mainRouter);
 
-// Error handler (must be last)
+// --- Centralized Error Handler (must be last) ---
 app.use(errorHandler);
 
-// Connect to DB, then start server
+// --- Start Server ---
 connectDB().then(() => {
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
